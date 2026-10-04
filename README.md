@@ -307,5 +307,3 @@ and `make tsan` checks the live multithreaded system for data races.
 | Name | Role |
 |---|---|
 | SK Rahemat Alli | Design and implementation |
-
-*(Add any teammates as extra rows. If this was an individual project, keep the single row.)*
