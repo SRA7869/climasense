@@ -23,31 +23,26 @@ class Controller {
 public:
     using Clock = std::chrono::steady_clock;
 
-    // logPath empty = no log file.
     explicit Controller(SystemConfig config, const std::string& logPath = "",
                         std::chrono::milliseconds samplePeriod = std::chrono::milliseconds(200));
     ~Controller();
     Controller(const Controller&) = delete;
     Controller& operator=(const Controller&) = delete;
 
-    // Setup: call before start().
     void addSensor(std::unique_ptr<ISensor> sensor);
-    void note(const std::string& text);     // only while stopped: before start() or after stop()
+    void note(const std::string& text);
     bool logging() const { return logger_ && logger_->isOpen(); }
 
     void start();
-    void stop();                            // safe to call twice, or without start()
+    void stop();
     bool running() const { return running_; }
 
-    // One control cycle. The control thread calls this in a loop; tests call it directly.
     void processBatch(const std::vector<Reading>& batch, Clock::time_point now);
 
-    // Safe to call while running.
     Snapshot snapshot() const { return board_.snapshot(); }
     long long uptimeMs() const;
-    void mark(const std::string& text);     // adds a line to the recent-events panel
+    void mark(const std::string& text);
 
-    // Read these only after stop(), or when the controller was never started.
     int processed() const { return processed_; }
     const ComfortStateMachine& machine() const { return machine_; }
     const DeviceManager& devices() const { return devices_; }
@@ -66,7 +61,6 @@ private:
     std::thread sensorThread_;
     std::thread controlThread_;
 
-    // Touched only by processBatch(), so only by one thread at a time.
     Validator tempVal_{Limits{-40.0, 80.0}};
     Validator humVal_{Limits{0.0, 100.0}};
     SensorHealth tempHealth_;

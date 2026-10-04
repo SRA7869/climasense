@@ -16,8 +16,6 @@ public:
         cv_.notify_one();
     }
 
-    // Blocks until an item arrives. Returns false once the queue is
-    // closed AND empty (the consumer's signal to stop).
     bool pop(T& out) {
         std::unique_lock<std::mutex> lock(m_);
         cv_.wait(lock, [this] { return !q_.empty() || closed_; });

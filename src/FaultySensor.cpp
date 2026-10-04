@@ -20,7 +20,7 @@ void FaultySensor::setFault(Fault f) {
 }
 
 double FaultySensor::read() {
-    const double real = inner_->read();   // the real room keeps evolving
+    const double real = inner_->read();
 
     switch (fault_.load()) {
         case Fault::NAN_VALUE:    return std::numeric_limits<double>::quiet_NaN();

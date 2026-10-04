@@ -30,9 +30,7 @@ int newlines(const std::string& s) {
     return static_cast<int>(std::count(s.begin(), s.end(), '\n'));
 }
 
-}  // namespace
-
-// ---------- Config ----------
+}
 
 TEST(config_missing_file_keeps_defaults) {
     SystemConfig cfg;
@@ -56,7 +54,7 @@ TEST(config_loads_valid_values) {
     CHECK_NEAR(cfg.comfort.tempHigh, 26.5, 1e-9);
     CHECK_NEAR(cfg.comfort.humidityHigh, 60.0, 1e-9);
     CHECK(!cfg.automation.fanRunsWithAc);
-    CHECK_NEAR(cfg.comfort.tempVeryHigh, 33.0, 1e-9);   // untouched default
+    CHECK_NEAR(cfg.comfort.tempVeryHigh, 33.0, 1e-9);
 }
 
 TEST(config_reports_bad_lines) {
@@ -77,7 +75,7 @@ TEST(config_rejects_inconsistent_thresholds) {
     const ConfigReport rep = loadConfig(kTmp, cfg);
     std::remove(kTmp);
     CHECK(rep.problems.size() == 1);
-    CHECK_NEAR(cfg.comfort.tempHigh, 28.0, 1e-9);       // fell back to defaults
+    CHECK_NEAR(cfg.comfort.tempHigh, 28.0, 1e-9);
     CHECK_NEAR(cfg.comfort.tempVeryHigh, 33.0, 1e-9);
 }
 
@@ -99,8 +97,6 @@ TEST(config_rejects_nan_value) {
     CHECK_NEAR(cfg.comfort.tempHigh, 28.0, 1e-9);
 }
 
-// ---------- EventBus ----------
-
 TEST(events_are_delivered_in_order) {
     EventBus bus;
     std::vector<std::string> seen;
@@ -109,7 +105,7 @@ TEST(events_are_delivered_in_order) {
     bus.publish(makeEvent(EventType::SYSTEM_STARTED, "b"));
     bus.publish(makeEvent(EventType::SYSTEM_STARTED, "c"));
     CHECK(bus.pending() == 3);
-    CHECK(seen.empty());                            // publish only queues
+    CHECK(seen.empty());
     CHECK(bus.dispatchAll() == 3);
     CHECK(bus.pending() == 0);
     CHECK((seen == std::vector<std::string>{"a", "b", "c"}));
@@ -138,11 +134,9 @@ TEST(events_handlers_can_publish_follow_ups) {
         bus.publish(makeEvent(EventType::SENSOR_INVALID, "follow-up"));
     });
     bus.publish(makeEvent(EventType::SYSTEM_STARTED, "start"));
-    CHECK(bus.dispatchAll() == 2);                  // the follow-up is delivered in the same call
+    CHECK(bus.dispatchAll() == 2);
     CHECK(delivered == 2);
 }
-
-// ---------- ThreadSafeQueue ----------
 
 TEST(queue_delivers_in_order_and_drains_after_close) {
     ThreadSafeQueue<int> q;
@@ -157,7 +151,7 @@ TEST(queue_delivers_in_order_and_drains_after_close) {
     CHECK(v == 2);
     CHECK(q.pop(v));
     CHECK(v == 3);
-    CHECK(!q.pop(v));                               // closed and empty: consumer stops
+    CHECK(!q.pop(v));
 }
 
 TEST(queue_works_across_threads) {
@@ -183,15 +177,13 @@ TEST(queue_close_wakes_waiting_consumer) {
     bool gotItem = true;
     std::thread consumer([&] {
         int v = 0;
-        gotItem = q.pop(v);                         // blocks: the queue is empty
+        gotItem = q.pop(v);
     });
     std::this_thread::sleep_for(50ms);
     q.close();
-    consumer.join();                                // would hang forever if close() did not wake it
+    consumer.join();
     CHECK(!gotItem);
 }
-
-// ---------- Statistics and dashboard ----------
 
 TEST(stats_running_stat_tracks_min_max_mean) {
     RunningStat r;
@@ -239,6 +231,6 @@ TEST(dashboard_frame_height_is_constant) {
     for (int i = 0; i < 10; ++i) full.pushRecent("event " + std::to_string(i));
     full.stats.samples = 99;
     full.stats.temp.add(30.0);
-    CHECK(newlines(renderDashboard(empty, 0)) == 24);       // the live redraw depends on this
+    CHECK(newlines(renderDashboard(empty, 0)) == 24);
     CHECK(newlines(renderDashboard(full, 5000)) == 24);
 }

@@ -7,10 +7,10 @@ const char* toString(TempLevel l);
 const char* toString(HumidityLevel l);
 
 struct ComfortConfig {
-    double tempHigh      = 28.0;   // C
-    double tempVeryHigh  = 33.0;   // C
-    double humidityHigh  = 70.0;   // %RH
-    double hysteresis    = 1.0;    // margin before dropping back down
+    double tempHigh      = 28.0;
+    double tempVeryHigh  = 33.0;
+    double humidityHigh  = 70.0;
+    double hysteresis    = 1.0;
 };
 
 struct ComfortAssessment {

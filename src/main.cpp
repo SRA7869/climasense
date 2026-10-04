@@ -61,7 +61,6 @@ int main() {
     if (!report.fileFound) controller.note("config file not found, using defaults");
     for (const std::string& p : report.problems) controller.note("config problem: " + p);
 
-    // Simulated room: sensors wrapped so faults can be injected.
     auto tempInner = std::make_unique<TemperatureSensor>(25.0);
     auto humInner  = std::make_unique<HumiditySensor>(50.0);
     TemperatureSensor* room = tempInner.get();
@@ -77,7 +76,6 @@ int main() {
     controller.start();
     dashboard.start();
 
-    // The main thread plays the room and the fault injector.
     std::this_thread::sleep_for(4s);
     controller.mark(">>> injecting fault: temperature OUT_OF_RANGE");
     tempFault->setFault(Fault::OUT_OF_RANGE);

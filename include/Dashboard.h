@@ -10,10 +10,10 @@ public:
     Dashboard(const Dashboard&) = delete;
     Dashboard& operator=(const Dashboard&) = delete;
 
-    bool live() const { return tty_; }   // false when output is a pipe or file
-    void start();                        // no-op when output is not a terminal
-    void stop();                         // stops redrawing and joins
-    void showFinal();                    // draws the last frame once; call after stop()
+    bool live() const { return tty_; }
+    void start();
+    void stop();
+    void showFinal();
 
 private:
     const Controller& ctl_;

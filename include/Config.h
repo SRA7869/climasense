@@ -14,5 +14,4 @@ struct ConfigReport {
     std::vector<std::string> problems;
 };
 
-// Applies valid settings; inconsistent thresholds reset cfg to defaults.
 ConfigReport loadConfig(const std::string& path, SystemConfig& cfg);

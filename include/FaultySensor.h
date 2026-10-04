@@ -16,11 +16,11 @@ public:
     std::string name() const override { return inner_->name(); }
     std::string unit() const override { return inner_->unit(); }
 
-    void setFault(Fault f);   // safe to call from any thread
+    void setFault(Fault f);
 
 private:
     std::unique_ptr<ISensor> inner_;
     std::atomic<Fault> fault_{Fault::NONE};
-    double lastGood_ = 0.0;   // only touched by read()
+    double lastGood_ = 0.0;
     bool hasLastGood_ = false;
 };

@@ -74,6 +74,6 @@ std::string renderDashboard(const Snapshot& s, long long uptimeMs) {
     for (std::size_t i = 0; i < Snapshot::kRecent; ++i) {
         os << "   " << (i < s.recent.size() ? s.recent[i] : std::string()) << "\n";
     }
-    os << std::string(52, '=');          // no trailing newline
+    os << std::string(52, '=');
     return os.str();
 }

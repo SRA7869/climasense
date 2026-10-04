@@ -26,7 +26,7 @@ struct Stats {
     int deviceSwitches = 0;
     RunningStat temp;
     RunningStat humidity;
-    std::array<double, 4> secondsInState{};   // indexed by ComfortState
+    std::array<double, 4> secondsInState{};
 };
 
 struct Snapshot {
@@ -43,7 +43,7 @@ struct Snapshot {
     Stats stats;
     std::deque<std::string> recent;
 
-    void pushRecent(std::string line);   // keeps only the newest kRecent lines
+    void pushRecent(std::string line);
 };
 
 class StatusBoard {

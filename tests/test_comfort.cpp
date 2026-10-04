@@ -18,19 +18,17 @@ int countTempChanges(ComfortCalculator& calc, std::initializer_list<double> temp
     return changes;
 }
 
-}  // namespace
-
-// ---------- ComfortCalculator ----------
+}
 
 TEST(comfort_temperature_levels_with_hysteresis) {
-    ComfortCalculator c;                            // 28 / 33, hysteresis 1
+    ComfortCalculator c;
     CHECK(c.assess(25.0, 50.0).temp == TempLevel::NORMAL);
     CHECK(c.assess(27.9, 50.0).temp == TempLevel::NORMAL);
     CHECK(c.assess(28.0, 50.0).temp == TempLevel::HIGH);
     CHECK(c.assess(33.0, 50.0).temp == TempLevel::VERY_HIGH);
-    CHECK(c.assess(32.5, 50.0).temp == TempLevel::VERY_HIGH);   // not below 32 yet
+    CHECK(c.assess(32.5, 50.0).temp == TempLevel::VERY_HIGH);
     CHECK(c.assess(31.9, 50.0).temp == TempLevel::HIGH);
-    CHECK(c.assess(27.5, 50.0).temp == TempLevel::HIGH);        // not below 27 yet
+    CHECK(c.assess(27.5, 50.0).temp == TempLevel::HIGH);
     CHECK(c.assess(26.9, 50.0).temp == TempLevel::NORMAL);
 }
 
@@ -41,12 +39,12 @@ TEST(comfort_very_high_can_drop_straight_to_normal) {
 }
 
 TEST(comfort_humidity_levels_with_hysteresis) {
-    ComfortCalculator c;                            // 70, hysteresis 1
+    ComfortCalculator c;
     CHECK(c.assess(25.0, 60.0).humidity == HumidityLevel::NORMAL);
     CHECK(c.assess(25.0, 69.9).humidity == HumidityLevel::NORMAL);
     CHECK(c.assess(25.0, 70.0).humidity == HumidityLevel::HIGH);
     CHECK(c.assess(25.0, 75.0).humidity == HumidityLevel::HIGH);
-    CHECK(c.assess(25.0, 69.5).humidity == HumidityLevel::HIGH);    // not below 69 yet
+    CHECK(c.assess(25.0, 69.5).humidity == HumidityLevel::HIGH);
     CHECK(c.assess(25.0, 68.9).humidity == HumidityLevel::NORMAL);
 }
 
@@ -68,8 +66,6 @@ TEST(comfort_custom_thresholds_are_respected) {
     CHECK(c.assess(21.0, 50.0).temp == TempLevel::HIGH);
     CHECK(c.assess(26.0, 50.0).temp == TempLevel::VERY_HIGH);
 }
-
-// ---------- ComfortStateMachine ----------
 
 TEST(state_machine_maps_every_combination) {
     struct Row {

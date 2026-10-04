@@ -28,15 +28,13 @@ void feed(Controller& c, double t, double h) {
 const char* kAllOn  = "FAN:ON AC:ON EXHAUST:ON";
 const char* kAllOff = "FAN:OFF AC:OFF EXHAUST:OFF";
 
-// Heats the room to VERY_UNCOMFORTABLE with every device on.
-// Every value differs from the last, so the stuck-value check never fires.
 void heatUp(Controller& c) {
     feed(c, 25.0, 50.0);
     feed(c, 29.0, 50.5);
     feed(c, 34.0, 75.0);
 }
 
-}  // namespace
+}
 
 TEST(controller_heats_up_and_switches_devices) {
     Controller c(SystemConfig{});
@@ -66,22 +64,22 @@ TEST(controller_fails_safe_then_recovers) {
     heatUp(c);
     CHECK(c.devices().statusLine() == kAllOn);
 
-    feed(c, 999.0, 75.1);                       // bad reading 1: skipped
+    feed(c, 999.0, 75.1);
     CHECK(c.devices().statusLine() == kAllOn);
-    feed(c, 999.0, 75.2);                       // bad reading 2: still skipped
+    feed(c, 999.0, 75.2);
     CHECK(c.devices().statusLine() == kAllOn);
     CHECK(!c.snapshot().tempFailed);
 
-    feed(c, 999.0, 75.3);                       // bad reading 3: declared failed
+    feed(c, 999.0, 75.3);
     CHECK(c.snapshot().tempFailed);
     CHECK(c.devices().statusLine() == kAllOff);
 
-    feed(c, 34.1, 75.4);                        // good readings 1 and 2: still in fail-safe
+    feed(c, 34.1, 75.4);
     feed(c, 34.2, 75.5);
     CHECK(c.snapshot().tempFailed);
     CHECK(c.devices().statusLine() == kAllOff);
 
-    feed(c, 34.3, 75.6);                        // good reading 3: recovered
+    feed(c, 34.3, 75.6);
     CHECK(!c.snapshot().tempFailed);
     CHECK(c.devices().statusLine() == kAllOn);
 
@@ -89,7 +87,7 @@ TEST(controller_fails_safe_then_recovers) {
     CHECK(s.stats.invalidReadings == 3);
     CHECK(s.stats.failures == 1);
     CHECK(s.stats.recoveries == 1);
-    CHECK(c.machine().transitionCount() == 2);  // the comfort state held during the failure
+    CHECK(c.machine().transitionCount() == 2);
 }
 
 TEST(controller_ignores_a_single_bad_reading) {
@@ -113,7 +111,7 @@ TEST(controller_statistics_exclude_invalid_readings) {
     CHECK(s.stats.temp.count == 2);
     CHECK_NEAR(s.stats.temp.max, 32.0, 1e-9);
     CHECK_NEAR(s.temp, 32.0, 1e-9);
-    CHECK(s.stats.humidity.count == 3);         // humidity was valid in all three samples
+    CHECK(s.stats.humidity.count == 3);
     CHECK(s.stats.invalidReadings == 1);
 }
 
@@ -128,10 +126,10 @@ TEST(controller_runs_and_stops_cleanly) {
     c.stop();
     CHECK(!c.running());
     CHECK(c.processed() >= 3);
-    c.stop();                                   // a second stop is harmless
+    c.stop();
 
     Controller idle(SystemConfig{});
-    idle.stop();                                // stopping what never started is harmless
+    idle.stop();
     CHECK(!idle.running());
 }
 

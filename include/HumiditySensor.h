@@ -10,7 +10,7 @@ public:
     double read() override;
     std::string name() const override { return "Humidity"; }
     std::string unit() const override { return "%"; }
-    void setTarget(double targetPct);   // safe to call from any thread
+    void setTarget(double targetPct);
 
 private:
     double current_;

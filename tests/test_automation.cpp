@@ -16,9 +16,7 @@ bool single(const std::vector<DeviceCommand>& v, DeviceId d, bool on) {
     return v.size() == 1 && v[0].device == d && v[0].on == on;
 }
 
-}  // namespace
-
-// ---------- AutomationEngine ----------
+}
 
 TEST(automation_decides_devices_for_every_level) {
     struct Row {
@@ -71,14 +69,12 @@ TEST(automation_shutdown_all_turns_everything_off) {
     CHECK(off.size() == 3);
     for (const DeviceCommand& c : off) CHECK(!c.on);
 
-    CHECK(e.shutdownAll().empty());                 // nothing left to switch off
+    CHECK(e.shutdownAll().empty());
 
     const std::vector<DeviceCommand> on = e.evaluate({TempLevel::VERY_HIGH, HumidityLevel::HIGH});
-    CHECK(on.size() == 3);                          // recovery: everything comes back
+    CHECK(on.size() == 3);
     for (const DeviceCommand& c : on) CHECK(c.on);
 }
-
-// ---------- Devices ----------
 
 TEST(devices_virtual_device_ignores_repeated_state) {
     Fan f;
@@ -109,10 +105,8 @@ TEST(devices_on_time_accumulates_only_while_on) {
     const auto t1 = f.onTime();
     CHECK(t1 >= 40ms);
     std::this_thread::sleep_for(30ms);
-    CHECK(f.onTime() == t1);                        // frozen while off
+    CHECK(f.onTime() == t1);
 }
-
-// ---------- The whole decision pipeline, no threads, no randomness ----------
 
 TEST(pipeline_heat_up_and_cool_down) {
     ComfortCalculator calc;

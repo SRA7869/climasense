@@ -18,7 +18,7 @@ const char* toString(EventType t);
 struct Event {
     EventType type;
     std::string message;
-    ComfortState state;   // only meaningful for STATE_CHANGED
+    ComfortState state;
     std::chrono::steady_clock::time_point timestamp;
 };
 

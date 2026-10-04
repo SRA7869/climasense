@@ -14,7 +14,6 @@ Controller::Controller(SystemConfig config, const std::string& logPath,
       lastTick_(start_) {
     if (!logPath.empty()) logger_ = std::make_unique<Logger>(logPath, start_);
 
-    // Statistics and the recent-events panel are just another subscriber.
     bus_.subscribeAll([this](const Event& e) {
         std::ostringstream os;
         os << std::left << std::setw(17) << toString(e.type) << std::right << e.message;
@@ -65,7 +64,7 @@ std::string Controller::stamp(Clock::time_point when, const std::string& text) c
 }
 
 void Controller::start() {
-    if (running_.exchange(true)) return;                // already running
+    if (running_.exchange(true)) return;
 
     bus_.publish(makeEvent(EventType::SYSTEM_STARTED, "controller started"));
     bus_.dispatchAll();
@@ -83,14 +82,13 @@ void Controller::start() {
 }
 
 void Controller::stop() {
-    if (!running_.exchange(false)) return;              // never started, or already stopped
-    sensorThread_.join();                               // stop the producer
-    samples_.close();                                   // let the consumer drain and finish
+    if (!running_.exchange(false)) return;
+    sensorThread_.join();
+    samples_.close();
     controlThread_.join();
     note("system stopped");
 }
 
-// Judge one reading: publish events, update health, say if it is usable.
 bool Controller::judge(const Reading& r, Validator& val, SensorHealth& health,
                        Clock::time_point now) {
     const ValidationResult v = val.check(r, now);
@@ -123,7 +121,7 @@ void Controller::processBatch(const std::vector<Reading>& batch, Clock::time_poi
 
     std::vector<DeviceCommand> cmds;
     if (tempHealth_.failed() || humHealth_.failed()) {
-        cmds = engine_.shutdownAll();                   // fail-safe
+        cmds = engine_.shutdownAll();
     } else if (tOk && hOk) {
         const ComfortAssessment a = calc_.assess(t, h);
         const StateTransition tr = machine_.update(a);
@@ -134,7 +132,7 @@ void Controller::processBatch(const std::vector<Reading>& batch, Clock::time_poi
                 tr.to));
         }
         cmds = engine_.evaluate(a);
-    }   // else: unusable sample, but the sensor is not failed yet; skip it
+    }
 
     for (const DeviceCommand& c : cmds) {
         devices_.apply(c);
@@ -143,7 +141,6 @@ void Controller::processBatch(const std::vector<Reading>& batch, Clock::time_poi
             std::string(toString(c.device)) + (c.on ? " ON" : " OFF")));
     }
 
-    // Publish what the screen needs, in one short locked step.
     const double dt = std::max(0.0, std::chrono::duration<double>(now - lastTick_).count());
     lastTick_ = now;
     board_.update([&](Snapshot& s) {

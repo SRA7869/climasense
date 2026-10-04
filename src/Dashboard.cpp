@@ -13,19 +13,19 @@ int lineCount(const std::string& frame) {
     return static_cast<int>(std::count(frame.begin(), frame.end(), '\n')) + 1;
 }
 
-// Moves the cursor back over the previous frame and draws the new one on top.
+
 std::string redraw(const std::string& frame, int prevLines) {
     std::string out;
     if (prevLines > 0) out += "\033[" + std::to_string(prevLines) + "A";
     for (char c : frame) {
-        if (c == '\n') out += "\033[K";   // erase leftovers at the end of the line
+        if (c == '\n') out += "\033[K";
         out += c;
     }
     out += "\033[K";
     return out;
 }
 
-}  // namespace
+}
 
 Dashboard::Dashboard(const Controller& controller)
     : ctl_(controller), tty_(isatty(STDOUT_FILENO) != 0) {}

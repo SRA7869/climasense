@@ -29,7 +29,7 @@ public:
                                const AutomationConfig& cfg);
 
     std::vector<DeviceCommand> evaluate(const ComfortAssessment& a);
-    std::vector<DeviceCommand> shutdownAll();   // fail-safe: everything off
+    std::vector<DeviceCommand> shutdownAll();
     const DeviceDemand& current() const { return current_; }
 
 private:
