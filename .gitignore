@@ -1,0 +1,6 @@
+*.log
+climasense
+run_tests
+run_tests_asan
+climasense_tsan
+test_tmp.conf
