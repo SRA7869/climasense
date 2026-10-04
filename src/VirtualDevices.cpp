@@ -5,7 +5,7 @@ VirtualDevice::VirtualDevice(std::string name, double watts)
     : name_(std::move(name)), watts_(watts) {}
 
 void VirtualDevice::setOn(bool on) {
-    if (on == on_) return;                       // already in that state
+    if (on == on_) return;
     const auto now = std::chrono::steady_clock::now();
     if (on) {
         onSince_ = now;

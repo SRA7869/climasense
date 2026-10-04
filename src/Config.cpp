@@ -28,12 +28,12 @@ bool parseBool(const std::string& s, bool& out) {
     return false;
 }
 
-}  // namespace
+}
 
 ConfigReport loadConfig(const std::string& path, SystemConfig& cfg) {
     ConfigReport report;
     std::ifstream in(path);
-    if (!in) return report;          // file missing: fileFound stays false, defaults kept
+    if (!in) return report;
     report.fileFound = true;
 
     std::string line;

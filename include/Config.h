@@ -14,6 +14,5 @@ struct ConfigReport {
     std::vector<std::string> problems;
 };
 
-// Starts from whatever is in cfg (the defaults), applies valid lines from the
-// file, and reverts to defaults if the result is inconsistent.
+// Applies valid settings; inconsistent thresholds reset cfg to defaults.
 ConfigReport loadConfig(const std::string& path, SystemConfig& cfg);

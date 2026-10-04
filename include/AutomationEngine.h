@@ -11,14 +11,14 @@ struct DeviceCommand {
     bool on;
 };
 
-struct DeviceDemand {      // which devices should be on right now
+struct DeviceDemand {
     bool fan = false;
     bool ac = false;
     bool exhaust = false;
 };
 
 struct AutomationConfig {
-    bool fanRunsWithAc = true;   // keep the fan on while the AC is on
+    bool fanRunsWithAc = true;
 };
 
 class AutomationEngine {
